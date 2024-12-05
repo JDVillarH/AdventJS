@@ -19,24 +19,24 @@ export default function listGifts(letter) {
 // Reto #3 - El Grinch quiere fastidiar la Navidad
 export default function isValid(letter) {
     const letterArray = letter.split(" ")
-    return letterArray.every(element => /\(\p{Script=Latin}+\)|^\p{Script=Latin}+$/ugm.test(element))
+    return letterArray.every(element => /\(\p{Script=Latin}+\)|^\p{Script=Latin}+$/u.test(element))
 }
 
 // Reto #4 ¡Es hora de poner la navidad en casa!
 export default function createXmasTree(height) {
-    const itemsArbol = height + (height - 1)
-    const mitadItems = Math.floor(itemsArbol / 2)
-    const troncoArbol = `${"_".repeat(mitadItems)}#${"_".repeat(mitadItems)}`
-    let stringArbol = ""
-
+    const totalWidth = (height * 2) - 1;
+    const centerIndex = Math.floor(totalWidth / 2);
+    const trunk = `${"_".repeat(centerIndex)}#${"_".repeat(centerIndex)}`;
+    const tree = [];
+  
     for (let i = 0; i < height; i++) {
-        for (let j = 0; j < itemsArbol; j++) {
-            stringArbol += (j >= (mitadItems - i) && j <= (mitadItems + i)) ? "*" : "_"
-        }
-        stringArbol += "\n"
+      const ornamentsRow = "*".repeat(2 * i + 1);
+      const branches = ornamentsRow.padStart(centerIndex + i + 1, "_").padEnd(totalWidth, "_");
+      tree.push(branches);
     }
-    stringArbol += `${troncoArbol}\n${troncoArbol}`
-    return stringArbol
+  
+    tree.push(trunk, trunk);
+    return tree.join("\n");
 }
 
 // Reto #5 - Contando los días para los regalos
@@ -111,7 +111,6 @@ export default function groupBy(collection, it) {
 
 // Reto #10 - La máquina de cambio
 export default function getCoins(change) {
-
     const coinsTemplate = [50, 20, 10, 5, 2, 1]
     const coinsReturn = coinsTemplate.map((coin, index) => {
         const currentCoins = Math.floor(change / coinsTemplate[index])
@@ -161,9 +160,26 @@ export default function missingReindeer(ids) {
     }
 }
 
+// Reto #15 - El salto del perfecto
+export default function checkSledJump(heights) {
+    const heightsLength = heights.length
+    const maxHeightIndex = heights.indexOf(Math.max(...heights));
+
+    if (maxHeightIndex === 0 || maxHeightIndex === heightsLength - 1) return false
+
+    for (let i = 0; i < maxHeightIndex; i++) {
+        if (heights[i] <= heights[i - 1]) return false
+    }
+
+    for (let i = (maxHeightIndex + 1); i < heightsLength; i++) {
+        if (heights[i] >= heights[i - 1]) return false
+    }
+
+    return true
+}
+
 // Reto #16 - Descifrando los números...
 export default function decodeNumber(symbols) {
-
     const convertedSymbols = []
     const symbolsTemplate = { '.': 1, ',': 5, ':': 10, ';': 50, '!': 100 }
 
